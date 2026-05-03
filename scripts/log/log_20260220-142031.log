@@ -1,0 +1,12 @@
+2026-02-20 02:20:31:Args: Namespace(adv_cfg_path='config.simpl_av2_cfg', data_aug=True, features_dir='data_av2/features/', logger_writer=True, mode='train', model_path=None, no_pbar=False, rank_metric='brier_fde_k', resume=False, seed=42, train_batch_size=4, train_epoches=10, use_cuda=True, val_batch_size=4, val_interval=2)
+
+2026-02-20 02:20:31:Project Path: /storage/ice-shared/cs7643/group-a/Early-exits-in-motion-forecasting/scripts
+2026-02-20 02:20:31:Datetime: 20260220-142031
+
+2026-02-20 02:20:31:Commit Msg: fatal: detected dubious ownership in repository at '/storage/ice-shared/cs7643/group-a'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /storage/ice-shared/cs7643/group-a
+
+2026-02-20 02:20:31:======================================
+

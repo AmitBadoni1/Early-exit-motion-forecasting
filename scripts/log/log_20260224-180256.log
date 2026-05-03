@@ -1,0 +1,13 @@
+2026-02-24 06:02:56:Args: Namespace(mode='train', features_dir='data_av2/features/', train_batch_size=4, val_batch_size=4, train_epoches=10, val_interval=2, data_aug=True, seed=42, use_cuda=True, logger_writer=True, adv_cfg_path='config.simpl_av2_cfg', rank_metric='brier_fde_k', resume=False, no_pbar=False, model_path=None)
+
+2026-02-24 06:02:56:Project Path: /storage/ice-shared/cs7643/group-a/Early-exits-in-motion-forecasting/scripts
+2026-02-24 06:02:56:Datetime: 20260224-180256
+
+2026-02-24 06:02:56:Commit Msg: commit 6e52427b6480639659315c8a350df0a8b6780243
+Author: Amit Badoni <amitbadoni1699@gmail.com>
+Date:   Sat Feb 7 14:03:26 2026 -0500
+
+    Add existing files to repo
+
+2026-02-24 06:02:56:======================================
+
