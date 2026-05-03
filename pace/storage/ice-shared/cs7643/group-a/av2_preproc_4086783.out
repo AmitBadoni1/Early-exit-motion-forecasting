@@ -1,0 +1,25 @@
+---------------------------------------
+Begin Slurm Prolog: Feb-17-2026 21:50:53
+Job ID:    4086783
+User ID:   abadoni3
+Account:   cse
+Job name:  av2_preproc
+Partition: coc-cpu
+QOS:       coc-ice
+---------------------------------------
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+av2_preproc_all.sh: line 2: cd: /home/hice1/abadoni3/scratch/Early-exits-in-motion-forecasting: No such file or directory
+---------------------------------------
+Begin Slurm Epilog: Feb-17-2026 21:51:00
+Job ID:        4086783
+User ID:       abadoni3
+Account:       cse
+Job name:      av2_preproc
+Resources:     cpu=12,mem=64G,node=1
+Rsrc Used:     cput=00:01:24,vmem=0,walltime=00:00:07,mem=40460K,energy_used=0
+Partition:     coc-cpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-3-1
+---------------------------------------

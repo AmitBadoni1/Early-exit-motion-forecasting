@@ -1,0 +1,96 @@
+---------------------------------------
+Begin Slurm Prolog: Feb-17-2026 22:04:04
+Job ID:    4086923
+User ID:   abadoni3
+Account:   cse
+Job name:  av2_preproc
+Partition: coc-cpu
+QOS:       coc-ice
+---------------------------------------
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+-- Processing AV2 val set...
+Num of sequences:  22019
+n_proc: 62, batch_size: 356
+save processed dataset to data_av2/features/val
+Preprocess for val set completed in 12.892215037345887 mins
+Finish computing 21716 - 22072
+Finish computing 3560 - 3916
+Finish computing 2136 - 2492
+Finish computing 14240 - 14596
+Finish computing 10680 - 11036
+Finish computing 19224 - 19580
+Finish computing 5340 - 5696
+Finish computing 16732 - 17088
+Finish computing 20648 - 21004
+Finish computing 14596 - 14952
+Finish computing 1424 - 1780
+Finish computing 7120 - 7476
+Finish computing 12460 - 12816
+Finish computing 6408 - 6764
+Finish computing 3916 - 4272
+Finish computing 11748 - 12104
+Finish computing 11392 - 11748
+Finish computing 0 - 356
+Finish computing 13884 - 14240
+Finish computing 7832 - 8188
+Finish computing 11036 - 11392
+Finish computing 17800 - 18156
+Finish computing 17444 - 17800
+Finish computing 18512 - 18868
+Finish computing 20292 - 20648
+Finish computing 1780 - 2136
+Finish computing 10324 - 10680
+Finish computing 9256 - 9612
+Finish computing 13172 - 13528
+Finish computing 16020 - 16376
+Finish computing 4984 - 5340
+Finish computing 4628 - 4984
+Finish computing 21360 - 21716
+Finish computing 21004 - 21360
+Finish computing 2848 - 3204
+Finish computing 17088 - 17444
+Finish computing 19936 - 20292
+Finish computing 12816 - 13172
+Finish computing 15664 - 16020
+Finish computing 712 - 1068
+Finish computing 4272 - 4628
+Finish computing 3204 - 3560
+Finish computing 6764 - 7120
+Finish computing 12104 - 12460
+Finish computing 19580 - 19936
+Finish computing 9968 - 10324
+Finish computing 1068 - 1424
+Finish computing 14952 - 15308
+Finish computing 18156 - 18512
+Finish computing 8900 - 9256
+Finish computing 9612 - 9968
+Finish computing 6052 - 6408
+Finish computing 8188 - 8544
+Finish computing 13528 - 13884
+Finish computing 356 - 712
+Finish computing 18868 - 19224
+Finish computing 8544 - 8900
+Finish computing 7476 - 7832
+Finish computing 16376 - 16732
+Finish computing 5696 - 6052
+Finish computing 2492 - 2848
+Finish computing 15308 - 15664
+-- Processing AV2 train set...
+Num of sequences:  199908
+n_proc: 62, batch_size: 3225
+save processed dataset to data_av2/features/train
+[2026-02-17T22:18:07.244] error: *** JOB 4086923 ON atl1-1-01-005-3-1 CANCELLED AT 2026-02-17T22:18:07 DUE to SIGNAL Terminated ***
+---------------------------------------
+Begin Slurm Epilog: Feb-17-2026 22:18:09
+Job ID:        4086923
+User ID:       abadoni3
+Account:       cse
+Job name:      av2_preproc
+Resources:     cpu=12,mem=64G,node=1
+Rsrc Used:     cput=02:48:36,vmem=0,walltime=00:14:03,mem=18713412K,energy_used=0
+Partition:     coc-cpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-3-1
+---------------------------------------

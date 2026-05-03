@@ -1,0 +1,8 @@
+data_av2/
+argoverse2_data/
+*.tar.gz
+*.pkl
+*.sh
+Miniconda3-latest-Linux-x86_64.sh
+log/
+*.tfevents*

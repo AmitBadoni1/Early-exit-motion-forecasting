@@ -1,0 +1,38 @@
+---------------------------------------
+Begin Slurm Prolog: Feb-17-2026 22:01:03
+Job ID:    4086903
+User ID:   abadoni3
+Account:   cse
+Job name:  av2_preproc
+Partition: coc-cpu
+QOS:       coc-ice
+---------------------------------------
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+-- Processing AV2 val set...
+Traceback (most recent call last):
+  File "/storage/ice-shared/cs7643/group-a/Early-exits-in-motion-forecasting/data_av2/run_preprocess.py", line 21, in <module>
+    from av2_preprocess import ArgoPreprocAV2
+  File "/storage/ice-shared/cs7643/group-a/Early-exits-in-motion-forecasting/data_av2/av2_preprocess.py", line 5, in <module>
+    from shapely.geometry import LineString
+ModuleNotFoundError: No module named 'shapely'
+-- Processing AV2 train set...
+Traceback (most recent call last):
+  File "/storage/ice-shared/cs7643/group-a/Early-exits-in-motion-forecasting/data_av2/run_preprocess.py", line 21, in <module>
+    from av2_preprocess import ArgoPreprocAV2
+  File "/storage/ice-shared/cs7643/group-a/Early-exits-in-motion-forecasting/data_av2/av2_preprocess.py", line 5, in <module>
+    from shapely.geometry import LineString
+ModuleNotFoundError: No module named 'shapely'
+---------------------------------------
+Begin Slurm Epilog: Feb-17-2026 22:01:18
+Job ID:        4086903
+User ID:       abadoni3
+Account:       cse
+Job name:      av2_preproc
+Resources:     cpu=12,mem=64G,node=1
+Rsrc Used:     cput=00:03:00,vmem=0,walltime=00:00:15,mem=274328K,energy_used=0
+Partition:     coc-cpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-3-1
+---------------------------------------
