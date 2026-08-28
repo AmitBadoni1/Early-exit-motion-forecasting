@@ -1,144 +1,213 @@
-# SIMPL: A Simple and Efficient Multi-agent Motion Prediction Baseline for Autonomous Driving
+# Early-Exit Multi-Agent Motion Forecasting
+
+A compute-adaptive extension of the pretrained SIMPL motion-forecasting model for the Argoverse 2 dataset.
+
+This project introduces a confidence-gated intermediate exit into SIMPL, allowing high-confidence scenes to bypass the remaining decoder computation while more difficult scenes continue through the complete network. The objective is to reduce inference time while preserving motion-forecasting quality.
 
 <p align="center">
-  <img src="files/logo.jpg" width = "400"/>
+  <img src="files/logo.jpg" width="400" alt="Early-Exit Motion Forecasting"/>
 </p>
 
-## Introduction
-This is the project page of the paper
+## Project Overview
 
-* Lu Zhang, Peiliang Li, Sikang Liu, and Shaojie Shen, "SIMPL: A Simple and Efficient Multi-agent Motion Prediction Baseline for Autonomous Driving", arXiv preprint arXiv:2402.02519 (2024), (Corresponding author: Lu ZHANG, lzhangbz@connect.ust.hk),
+Modern motion-forecasting models generate multiple possible future trajectories for surrounding agents. Although deeper processing can improve predictions for difficult scenes, many comparatively simple scenes may not require the complete network.
 
-which is accepted for publication in the IEEE Robotics and Automation Letters (RA-L), 2024.
+This project investigates whether SIMPL can perform compute-adaptive inference through an early-exit mechanism.
 
-**Preprint:** [arXiv](https://arxiv.org/abs/2402.02519)
+The modified inference process is:
 
-**Video:** [YouTube](https://youtu.be/_8-6ccopZMM)
+1. Process the scene using the pretrained SIMPL encoder.
+2. Generate an intermediate trajectory prediction through an added early-exit decoder.
+3. Estimate the confidence of the intermediate prediction.
+4. Exit early when confidence exceeds a selected threshold.
+5. Route lower-confidence scenes through the complete SIMPL network.
 
-## Qualitative Results
+The original SIMPL architecture, preprocessing pipeline, and forecasting framework are retained as the baseline. The principal contribution of this project is the design, integration, and evaluation of the confidence-gated early-exit mechanism.
 
-* On Argoverse 1 motion forecasting dataset
-<p align="center">
-  <img src="files/av1-s1.png" width = "200"/>
-  <img src="files/av1-s2.png" width = "200"/>
-  <img src="files/av1-s3.png" width = "200"/>
-  <img src="files/av1-s4.png" width = "200"/>
-</p>
+## Results
 
-* On Argoverse 2 motion forecasting dataset
-<p align="center">
-  <img src="files/av2-s1.png" width = "200"/>
-  <img src="files/av2-s2.png" width = "200"/>
-  <img src="files/av2-s3.png" width = "200"/>
-  <img src="files/av2-s4.png" width = "200"/>
-</p>
+The early-exit model was evaluated on the Argoverse 2 validation set containing 22,019 scenes.
 
-----
+| Metric | Result |
+|---|---:|
+| Validation scenes | 22,019 |
+| Scenes exiting early | 98.2% |
+| End-to-end runtime reduction | 5.2% |
+| minFDE<sub>K</sub> | 1.925 |
+| Baseline Brier-FDE<sub>K</sub> | 2.561 |
+| Early-exit Brier-FDE<sub>K</sub> | 2.559 |
 
-## Todo List
-- [x] Release code for Argoverse 2 dataset
-- [x] Release training and evaluation scripts for DDP
-- [x] First release
+Across five evaluated confidence thresholds, the selected configuration reduced end-to-end validation runtime by 5.2% while preserving the principal forecasting metrics. The Brier-FDE result changed from 2.561 for the baseline to 2.559 with early exiting.
 
-## Gettting Started
+These findings show that confidence-gated routing can avoid part of the model computation for most validation scenes without materially degrading forecasting quality.
 
-### Install dependencies
-- Create a new conda virtual env
-```
-conda create --name simpl python=3.8
-conda activate simpl
-```
+## Architecture
 
-- Install PyTorch according to your CUDA version. We recommend CUDA >= 11.1, PyTorch >= 1.8.0.
-```
-conda install pytorch==1.12.0 torchvision==0.13.0 torchaudio==0.12.0 cudatoolkit=11.6 -c pytorch -c conda-forge
+```mermaid
+flowchart TD
+    A["Argoverse 2 scene"] --> B["SIMPL encoder"]
+    B --> C["Intermediate decoder"]
+    C --> D{"Confidence above threshold?"}
+    D -->|Yes| E["Return early prediction"]
+    D -->|No| F["Complete SIMPL network"]
+    F --> G["Return final prediction"]
 ```
 
-- Install Argoverse 1 & 2 APIs, please follow [argoverse-api](https://github.com/argoai/argoverse-api) and [av2-api](https://argoverse.github.io/user-guide/getting_started.html).
+The early-exit branch produces the same forecasting output structure expected by the existing SIMPL evaluation pipeline. This allows the modified model to be compared directly with the pretrained baseline using standard Argoverse 2 forecasting metrics.
 
+## Dataset
 
-- Install other dependencies
+The project uses the [Argoverse 2 Motion Forecasting Dataset](https://www.argoverse.org/av2.html), which contains 250,000 scenarios featuring:
+
+- Historical trajectories for focal and surrounding actors
+- High-definition map information
+- Multiple interacting road users
+- Six predicted trajectory modes
+- A 60-step prediction horizon
+
+Follow the official [Argoverse 2 setup instructions](https://argoverse.github.io/user-guide/getting_started.html) to download and configure the dataset.
+
+## Getting Started
+
+### 1. Create the environment
+
+```bash
+conda create --name early-exit-simpl python=3.8
+conda activate early-exit-simpl
 ```
+
+### 2. Install PyTorch
+
+Install the PyTorch version compatible with your CUDA environment. The original SIMPL configuration uses PyTorch 1.12 and CUDA 11.6:
+
+```bash
+conda install pytorch==1.12.0 torchvision==0.13.0 \
+    torchaudio==0.12.0 cudatoolkit=11.6 \
+    -c pytorch -c conda-forge
+```
+
+### 3. Install Argoverse 2
+
+```bash
+pip install av2
+```
+
+For additional installation and dataset instructions, refer to the official [Argoverse 2 documentation](https://argoverse.github.io/user-guide/getting_started.html).
+
+### 4. Install the remaining dependencies
+
+```bash
 pip install scikit-image IPython tqdm ipdb tensorboard
 ```
 
-### Play with pretrained models (Argoverse 1)
-Generate a subset of the dataset for testing using the script. It will generate 1k samples to `data_argo/features/`:
-```
-sh scripts/argo_preproc_small.sh
-```
-The dataset directory should be organized as follows:
-```
-data_argo
-├── features
-│   ├── train
-│   │   ├── 100001.pkl
-│   │   ├── 100144.pkl
-│   │   ├── 100189.pkl
-...
-│   └── val
-│       ├── 10018.pkl
-│       ├── 10080.pkl
-│       ├── 10164.pkl
-...
+## Data Preparation
+
+Configure the Argoverse 2 dataset path and run the corresponding preprocessing script from the `scripts/` directory.
+
+The processed dataset should contain the actor-trajectory and HD-map features required by SIMPL. The original preprocessing and data-loading implementation is inherited from the SIMPL repository.
+
+If the system raises the following error while loading scene files:
+
+```text
+OSError: [Errno 24] Too many open files
 ```
 
-The pre-trained weights are located at `saved_models/`. Use the script below to visualize prediction results:
-```
-sh scripts/simpl_av1_vis.sh
-```
+increase the file-descriptor limit:
 
-Since we store each sequence as a single file, the system may raise error `OSError: [Erron 24] Too many open files` during evaluation and training. You may use the command below to solve this issue:
-```
+```bash
 ulimit -SHn 51200
 ulimit -s unlimited
 ```
 
-To evaluate the trained models:
-```
-sh scripts/simpl_av1_eval.sh
-```
-You are supposed to get:
-```
-Validation set finish, cost 289.01 secs
--- minade_1: 1.428 minfde_1: 3.240 mr_1: 0.512 brier_fde_1: 3.240 minade_k: 0.658 minfde_k: 0.947 mr_k: 0.081 brier_fde_k: 1.558
+## Training and Evaluation
+
+The early-exit decoder is trained on top of the SIMPL forecasting architecture. The repository supports:
+
+- Training the added intermediate prediction branch
+- Evaluating the original SIMPL baseline
+- Evaluating confidence-gated early-exit inference
+- Comparing runtime and forecasting accuracy
+- Testing multiple confidence thresholds
+
+Refer to the scripts under `scripts/` for the commands corresponding to Argoverse 2 training, baseline evaluation, and early-exit evaluation.
+
+The principal evaluation metrics include:
+
+- Minimum Average Displacement Error (`minADE_K`)
+- Minimum Final Displacement Error (`minFDE_K`)
+- Miss Rate (`MR_K`)
+- Brier Minimum Final Displacement Error (`Brier-FDE_K`)
+- End-to-end validation runtime
+- Percentage of scenes routed through the early exit
+
+## Experimental Design
+
+Five confidence thresholds were evaluated to measure the tradeoff among:
+
+- Early-exit rate
+- Forecasting quality
+- End-to-end runtime
+- Additional computation introduced by the intermediate decoder
+
+The confidence threshold determines how aggressively the model exits:
+
+- A lower threshold allows more scenes to exit early.
+- A higher threshold sends more scenes through the complete network.
+- The selected threshold aims to reduce computation without meaningfully degrading prediction quality.
+
+## Limitations
+
+The observed runtime improvement is smaller than the early-exit rate because the intermediate branch is evaluated for every scene and only a portion of the full model computation is skipped. Runtime is also influenced by data loading, encoding, batching, GPU utilization, and evaluation overhead.
+
+Therefore, the 98.2% early-exit rate should not be interpreted as a 98.2% reduction in runtime. The measured end-to-end runtime reduction was 5.2%.
+
+Further improvements could include:
+
+- Moving the exit point earlier in the architecture
+- Reducing the intermediate decoder’s computational overhead
+- Calibrating confidence scores
+- Learning the exit policy jointly with the forecasting objective
+- Evaluating the method under different batch sizes and hardware configurations
+- Testing scene-aware or actor-aware exit policies
+
+## Repository Structure
+
+```text
+Early-exit-motion-forecasting
+├── data_argo/
+├── files/
+├── scripts/
+├── simpl/
+├── saved_models/
+└── README.md
 ```
 
-### Train from scratch
+Directory names may differ depending on the local dataset and checkpoint configuration.
 
-- Preprocess full Argoverse 1 motion forecasting dataset using the script:
-```
-sh scripts/argo_preproc_all.sh
-```
-The preprocessed dataset will cost about 15 GB storage, please reserve enough space for preprocessing.
+## Built On SIMPL
 
-- Launch training using the script:
-```
-# single-GPU
-sh scripts/simpl_av1_train.sh
+This work is an extension of:
 
-# multi-GPU based on DDP
-sh scripts/simpl_av1_train_ddp.sh
-```
+> Lu Zhang, Peiliang Li, Sikang Liu, and Shaojie Shen,  
+> “SIMPL: A Simple and Efficient Multi-agent Motion Prediction Baseline for Autonomous Driving,”  
+> IEEE Robotics and Automation Letters, 2024.
 
-- For model evaluation, please refer to the following scripts:
-```
-# single-GPU
-sh scripts/simpl_av1_eval.sh
+- [Original SIMPL repository](https://github.com/HKUST-Aerial-Robotics/SIMPL)
+- [SIMPL paper](https://arxiv.org/abs/2402.02519)
+- [SIMPL video](https://youtu.be/_8-6ccopZMM)
 
-# multi-GPU based on DDP
-sh scripts/simpl_av1_eval_ddp.sh
-```
+The SIMPL model, its original training and preprocessing infrastructure, and portions of the repository structure originate from the authors’ public implementation. This project modifies that baseline to study confidence-gated early-exit inference.
 
-### Train/Evaluate/Visualize SIMPL using Argoverse 2
-Please refer to the scripts in the directory `scripts/`, and the usage is similar to scripts for the Argoverse 1 dataset. If you have any questions, please feel free to raise an issue or contact us via email.
+## Acknowledgments
 
+We thank the authors and maintainers of:
 
-## Acknowledgment
-We would like to express sincere thanks to the authors of the following packages and tools:
+- [SIMPL](https://github.com/HKUST-Aerial-Robotics/SIMPL)
+- [Argoverse 2](https://www.argoverse.org/av2.html)
 - [LaneGCN](https://github.com/uber-research/LaneGCN)
 - [HiVT](https://github.com/ZikangZhou/HiVT)
 - [DSP](https://github.com/HKUST-Aerial-Robotics/DSP)
 
 ## License
-This repository is licensed under [MIT license](https://github.com/HKUST-Aerial-Robotics/SIMPL/blob/main/LICENSE).
+
+This repository is derived from the original SIMPL implementation and remains subject to its [MIT License](https://github.com/HKUST-Aerial-Robotics/SIMPL/blob/main/LICENSE).
