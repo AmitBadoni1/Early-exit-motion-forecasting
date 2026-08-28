@@ -31,7 +31,7 @@ The early-exit model was evaluated on the Argoverse 2 validation set containing 
 | Metric | Result |
 |---|---:|
 | Validation scenes | 22,019 |
-| Scenes exiting early | 98.2% |
+| Scenes exiting early | 7.8% |
 | End-to-end runtime reduction | 5.2% |
 | minFDE<sub>K</sub> | 1.925 |
 | Baseline Brier-FDE<sub>K</sub> | 2.561 |
